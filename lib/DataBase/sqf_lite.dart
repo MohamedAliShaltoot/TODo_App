@@ -46,11 +46,12 @@ return mydb;
 _onCreate(Database db, int version) async {  // will call for first time only
 
   await db.execute('''
-
-  CREATE TABLE notes (id INTEGER PRIMARY KEY NOT NULL AUTOINCREMENT, title  NOT NULL TEXT, note NOT NULL TEXT)
-
-
-  ''');
+  CREATE TABLE "notes" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "title" TEXT NOT NULL,
+    "note" TEXT NOT NULL
+  )
+''');
 if (kDebugMode) {
   print('created');
 }
@@ -63,7 +64,7 @@ if (kDebugMode) {
  }
 
 
-isertData( String sql) async {
+insertData( String sql) async {
   Database? mydb = await db;  // wait the database to create
   int response = await mydb.rawInsert(sql); // 0 or 1,2,3...
   return response;
