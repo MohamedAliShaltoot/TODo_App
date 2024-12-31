@@ -20,34 +20,74 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Notes",style: TextStyle(color: Colors.white),),
+        title: const Text(
+          "Notes",
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: const Color.fromARGB(255, 36, 8, 84),
       ),
-      body: Column(
-        children: [
-          FutureBuilder(
-              future: ireadData(),
-              builder: (context, AsyncSnapshot<List<Map>> snapshot) {
-                if (snapshot.hasData) {
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) {
-                      return Card(
-                        child: ListTile(
-                          title: Text(snapshot.data![index]['title']),
-                          subtitle: Text(snapshot.data![index]['note']),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            FutureBuilder(
+                future: ireadData(),
+                builder: (context, AsyncSnapshot<List<Map>> snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        return Card(
+                          color: const Color.fromARGB(255, 36, 8, 84),
+                          margin: const EdgeInsets.all(8),
+                          elevation: 10,
 
-                        ),
-                      
-                      );
-                    },
-                  );
-                }
-                return const Center(child: CircularProgressIndicator());
-              }),
-        ],
+                          child: ListTile(
+                            title: Text(snapshot.data![index]['title'],
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                            )),
+                            subtitle: Text(snapshot.data![index]['note'],
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w700,
+                                )),
+                            trailing: IconButton(
+                              icon: const Icon(
+                                Icons.delete,
+                                color: Colors.red,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  
+                                });
+                                sqfLiteDb.deleteData(
+                                    "DELETE FROM 'notes' WHERE id = ${snapshot.data![index]['id']}");
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }
+                  return const Center(child: CircularProgressIndicator());
+                }),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        tooltip: "Add Note",
+        backgroundColor: const Color.fromARGB(255, 36, 8, 84),
+        onPressed: () {
+          Navigator.pushNamed(context, '/add_note');
+        },
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+          size: 25,
+        ),
       ),
     );
   }
