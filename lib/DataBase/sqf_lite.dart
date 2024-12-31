@@ -33,9 +33,13 @@ return mydb;
    }
 
 
-  _onUpgrade(Database db, int newversion, int oldversion) async 
+  _onUpgrade(Database db, int oldversion, int newversion) async 
   {
-
+//    await db.execute('''
+//  ALTER TABLE "notes" ADD COLUMN "note" TEXT NOT NULL
+//   )
+//   '''
+//    );
   }
 
 
@@ -59,7 +63,7 @@ if (kDebugMode) {
 
  readData( String sql) async {
   Database? mydb = await db;  // wait the database to create
-  List<Map> response = await mydb.rawQuery(sql);
+  List<Map> response = await mydb.rawQuery(sql);   //{id: 8, title: first app, note: it wasn ot easy bro}, {id: 8, title: first app, note: it wasn ot easy bro}, 
   return response;
  }
 
