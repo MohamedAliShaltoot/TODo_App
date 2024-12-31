@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sqflite_app/add_note_screen.dart';
 import 'package:sqflite_app/home_page.dart';
 
 void main() {
@@ -18,7 +19,11 @@ class NoteApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(),
+      initialRoute:'/home' ,
+     // home: const MyHomePage(),
+      routes: {
+        '/home': (context) => const MyHomePage(),
+        '/add_note': (context) => const AddNoteScreen(),},
     );
   }
 }
