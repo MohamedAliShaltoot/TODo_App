@@ -3,14 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:sqflite_app/DataBase/sqf_lite.dart';
 import 'package:sqflite_app/home_page.dart';
 
-class AddNoteScreen extends StatefulWidget {
-  const AddNoteScreen({super.key});
+class EditNoteScreen extends StatefulWidget {
+  final String title;
+  final String description;
+  final int id;
+
+  const EditNoteScreen(
+      {super.key,
+      required this.title,
+      required this.description,
+      required this.id});
 
   @override
-  State<AddNoteScreen> createState() => _AddNoteScreenState();
+  State<EditNoteScreen> createState() => _EditNoteScreen();
 }
 
-class _AddNoteScreenState extends State<AddNoteScreen> {
+class _EditNoteScreen extends State<EditNoteScreen> {
   SqfLiteDb sqfLiteDb = SqfLiteDb();
   GlobalKey formKey = GlobalKey<FormState>();
 
@@ -19,13 +27,23 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
   TextEditingController noteController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    titleController.text = widget.title;
+    noteController.text = widget.description;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add Note", style: TextStyle(color: Colors.white)),
-        leading:  IconButton(onPressed: (){
-          Navigator.pop(context);
-        }, icon: const Icon(Icons.arrow_back, color: Colors.white),),
+        title: const Text("Update Note", style: TextStyle(color: Colors.white)),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+        ),
         backgroundColor: const Color.fromARGB(255, 36, 8, 84),
       ),
       body: ListView(children: [
@@ -57,22 +75,22 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                   backgroundColor: const Color.fromARGB(255, 36, 8, 84),
                 ),
                 onPressed: () async {
-                  int response = await sqfLiteDb.insertData(
-                      "INSERT INTO 'notes' ('title', 'note') VALUES ('${titleController.text}', '${noteController.text}')");
+                  int response = await sqfLiteDb.updateData(
+                      "UPDATE notes SET title = '${titleController.text}', note = '${noteController.text}' WHERE id = ${widget.id}");
                   if (kDebugMode) {
                     print(response);
                   }
                   if (response > 0) {
   // ignore: use_build_context_synchronously
   ScaffoldMessenger.of(context).showSnackBar(
-    const SnackBar(content: Text("Note added successfully!")),
+    const SnackBar(content: Text("Note edited successfully!")),
   );
   // ignore: use_build_context_synchronously
   Navigator.pushReplacementNamed(context, '/home');
 }
 
                 },
-                child: const Text("Add Note",
+                child: const Text("Edit Note",
                     style: TextStyle(color: Colors.white)),
               ),
             ]),
